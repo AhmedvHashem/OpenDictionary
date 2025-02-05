@@ -12,6 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hashem.opendictionary.ui.theme.OpenDictionaryTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +30,13 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val result = async(Dispatchers.IO) {
+                // Do some background work
+            }
+            result.await()
         }
     }
 }
