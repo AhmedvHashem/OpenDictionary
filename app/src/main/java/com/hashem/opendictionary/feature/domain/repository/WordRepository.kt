@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WordRepository {
 
-    fun getWord(word: String): Flow<Result<Word>>
+    fun getWord(word: String): Flow<WordResult<Word>>
 
-    fun getRecentSearchWords(): Flow<Result<List<Word>>>
+    fun getRecentSearchWords(): Flow<WordResult<List<Word>>>
 }
