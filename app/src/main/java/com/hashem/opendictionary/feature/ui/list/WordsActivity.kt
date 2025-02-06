@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.feature
+package com.hashem.opendictionary.feature.ui.list
 
 
 import android.os.Bundle
