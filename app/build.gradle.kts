@@ -54,9 +54,11 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.retrofit)
+    implementation(libs.retrofit.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.room)
+    implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
     debugImplementation(libs.androidx.ui.tooling)
