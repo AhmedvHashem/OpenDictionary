@@ -42,7 +42,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspressoCore" }
-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+#room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

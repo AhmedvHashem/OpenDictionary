@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.ui.theme
+package com.hashem.opendictionary.common.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,5 @@
-package com.hashem.opendictionary
+package com.hashem.opendictionary.feature
+
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,11 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hashem.opendictionary.ui.theme.OpenDictionaryTheme
+import com.hashem.opendictionary.common.theme.OpenDictionaryTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

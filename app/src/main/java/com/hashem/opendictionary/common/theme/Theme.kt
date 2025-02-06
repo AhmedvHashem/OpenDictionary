@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.ui.theme
+package com.hashem.opendictionary.common.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
