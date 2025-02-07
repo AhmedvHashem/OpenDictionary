@@ -38,10 +38,15 @@ class WordRepository(
         try {
             val response = remote.getWords(word)
             if (response.isSuccessful) {
-                return response.body()?.flat() ?: throw WordError.NotFoundError
+                return response.body()?.flat() ?: throw WordError.ApiError
             } else {
-                throw WordError.ApiError
+                if (response.code() == 404)
+                    throw WordError.NotFoundError
+                else
+                    throw WordError.ApiError
             }
+        } catch (e: WordError) {
+            throw e
         } catch (e: IOException) {
             throw WordError.NetworkError
         } catch (e: Exception) {

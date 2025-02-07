@@ -13,7 +13,6 @@ import com.hashem.opendictionary.feature.data.WordRepository
 import com.hashem.opendictionary.feature.domain.GetRecentSearchWordsUseCase
 import com.hashem.opendictionary.feature.domain.GetWordUseCase
 import com.hashem.opendictionary.feature.domain.repository.WordResult
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AppViewModel(
@@ -34,8 +33,8 @@ class AppViewModel(
                 val repo = WordRepository(remote, cache)
 
                 AppViewModel(
-                    GetRecentSearchWordsUseCase(repo, Dispatchers.IO),
-                    GetWordUseCase(repo, Dispatchers.IO),
+                    GetRecentSearchWordsUseCase(repo),
+                    GetWordUseCase(repo),
                 )
             }
         }
@@ -55,7 +54,7 @@ class AppViewModel(
                 }
             }
 
-            getWordUseCase("but").collect { result ->
+            getWordUseCase("wwe").collect { result ->
                 Log.e("getWordUseCase", result.toString())
 
                 when (result) {
