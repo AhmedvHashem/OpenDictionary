@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.common.theme
+package com.hashem.opendictionary.theme
 
 import androidx.compose.ui.graphics.Color
 

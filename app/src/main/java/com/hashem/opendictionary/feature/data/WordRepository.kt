@@ -18,15 +18,15 @@ class WordRepository(
     private val cache: WordCacheDataSource
 ) : WordRepository {
 
-    override fun getWord(word: String): Flow<WordResult<Word>> = flow {
+    override fun getWord(word: String): Flow<WordResult<List<Word>>> = flow {
         val wordFromCache = cache.getWord(word)
-        if (wordFromCache != null) {
-            emit(wordFromCache.toWord())
+        if (wordFromCache.isNotEmpty()) {
+            emit(wordFromCache.map { it.toWord() })
         }
 
         val wordFromRemote = getWordFromRemote(word)
         cache.insertWord(wordFromRemote.toWordCache())
-        emit(wordFromRemote)
+        emit(listOf(wordFromRemote))
     }.asWordResultFlow()
 
     override fun getRecentSearchWords(): Flow<WordResult<List<Word>>> = flow {
