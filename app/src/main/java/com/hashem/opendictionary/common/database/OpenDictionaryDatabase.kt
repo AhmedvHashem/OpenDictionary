@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.hashem.opendictionary.feature.data.cache.WordCacheDataSource
 import com.hashem.opendictionary.feature.data.cache.models.WordCache
 
-@Database(entities = [WordCache::class], version = 1)
+@Database(entities = [WordCache::class], exportSchema = false, version = 1)
 @TypeConverters(Converter::class)
 abstract class OpenDictionaryDatabase : RoomDatabase() {
     abstract fun dataSource(): WordCacheDataSource

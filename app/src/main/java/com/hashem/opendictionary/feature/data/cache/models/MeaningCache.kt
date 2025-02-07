@@ -7,8 +7,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MeaningCache(
+    @SerialName("definitions")
     val definitions: List<DefinitionCache>,
+    @SerialName("synonyms")
     val synonyms: Set<String>,
+    @SerialName("antonyms")
     val antonyms: Set<String>
 ) {
     fun toMeaning(): Meaning {
@@ -29,7 +32,9 @@ fun Meaning.toMeaningCache(): MeaningCache {
 
 @Serializable
 data class DefinitionCache(
+    @SerialName("definition")
     val definition: String,
+    @SerialName("example")
     val example: String,
 ) {
     fun toDefinition(): Definition {
