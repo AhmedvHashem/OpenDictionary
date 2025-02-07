@@ -1,4 +1,4 @@
-package com.hashem.opendictionary
+package com.hashem.opendictionary.feature.ui
 
 
 import android.os.Bundle
@@ -54,7 +54,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hashem.opendictionary.feature.ui.AppUIState
 import com.hashem.opendictionary.theme.OpenDictionaryTheme
 
 

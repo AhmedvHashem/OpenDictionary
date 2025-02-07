@@ -1,4 +1,4 @@
-package com.hashem.opendictionary
+package com.hashem.opendictionary.feature.ui
 
 import android.app.Application
 import android.util.Log
@@ -7,13 +7,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.hashem.opendictionary.common.database.OpenDictionaryDatabase
-import com.hashem.opendictionary.common.network.OpenDictionaryNetwork
+import com.hashem.opendictionary.framework.database.OpenDictionaryDatabase
+import com.hashem.opendictionary.framework.network.OpenDictionaryNetwork
 import com.hashem.opendictionary.feature.data.WordRepository
 import com.hashem.opendictionary.feature.domain.GetRecentSearchWordsUseCase
 import com.hashem.opendictionary.feature.domain.GetWordUseCase
 import com.hashem.opendictionary.feature.domain.repository.WordResult
-import com.hashem.opendictionary.feature.ui.AppUIState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.common.database
+package com.hashem.opendictionary.framework.database
 
 import android.content.Context
 import androidx.room.Database
