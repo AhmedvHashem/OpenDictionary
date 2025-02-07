@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -54,6 +55,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hashem.opendictionary.feature.ui.models.WordUI
 import com.hashem.opendictionary.theme.OpenDictionaryTheme
 
 
@@ -71,13 +73,20 @@ class AppActivity : ComponentActivity() {
                 val scope = rememberCoroutineScope()
 
                 val uiState by appViewModel.uiState.collectAsStateWithLifecycle()
+                val searchResults by appViewModel.searchResults.collectAsStateWithLifecycle()
+                val searchAction: (searchQuery: String) -> Unit = { appViewModel.search(it) }
 
                 Scaffold(
                     snackbarHost = { SnackbarHost(snackBarHostState) },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
 //                    scope.launch { snackBarHostState.showSnackbar("Hi SnackBar") }
-                    App(modifier = Modifier.padding(innerPadding))
+                    App(
+                        modifier = Modifier.padding(innerPadding),
+                        uiState = uiState,
+                        searchResults = searchResults,
+                        searchAction = searchAction
+                    )
                 }
             }
         }
@@ -93,21 +102,15 @@ fun OpenDictionaryAppPreview() {
     }
 }
 
-data class DictionaryEntry(
-    val word: String,
-    val definition: String
-)
-
 @Composable
-fun App(modifier: Modifier = Modifier, uiState: AppUIState = AppUIState.Loading) {
-    val entries = List(5) {
-        DictionaryEntry(
-            "Dog",
-            "The dog (Canis familiaris when considered a distinct species " +
-                    "or Canis lupus familiaris when considered a subspecies of the " +
-                    "wolf)[5] is a domesticated carnivore of the family Canidae."
-        )
-    }
+fun App(
+    modifier: Modifier = Modifier,
+    uiState: AppUIState = AppUIState.Loading,
+    searchResults: List<WordUI> = emptyList(),
+    searchAction: (searchQuery: String) -> Unit = {}
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    var showRecentSearch by remember { mutableStateOf(true) }
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -126,22 +129,65 @@ fun App(modifier: Modifier = Modifier, uiState: AppUIState = AppUIState.Loading)
 
             AppSearchBar(
                 modifier = Modifier.padding(bottom = 16.dp),
-                onSearchClicked = { },
+                searchQuery,
+                onSearchQueryChanged = { searchQuery = it },
+                onSearchClicked = {
+                    showRecentSearch = it.isEmpty()
+                    searchAction(it)
+                },
             )
 
-            Text(
-                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                text = "Recent searches",
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-            )
+            if (showRecentSearch) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                    text = "Recent searches",
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                )
+            }
 
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(entries) { entry ->
-                    AppCard(entry)
+            when (uiState) {
+                AppUIState.Loading -> {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                        text = "Loading...",
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    )
+                }
+
+                AppUIState.Success -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(searchResults) { word ->
+                            AppCard(word)
+                        }
+                    }
+                }
+
+                is AppUIState.Error -> {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                        text = uiState.message,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
+
+//            val entries = List(5) {
+//                DictionaryEntry(
+//                    "Dog",
+//                    "The dog (Canis familiaris when considered a distinct species " +
+//                            "or Canis lupus familiaris when considered a subspecies of the " +
+//                            "wolf)[5] is a domesticated carnivore of the family Canidae."
+//                )
+//            }
+//            LazyColumn(
+//                verticalArrangement = Arrangement.spacedBy(16.dp)
+//            ) {
+//                items(entries) { entry ->
+//                    AppCard(entry)
+//                }
+//            }
         }
     }
 }
@@ -149,10 +195,11 @@ fun App(modifier: Modifier = Modifier, uiState: AppUIState = AppUIState.Loading)
 @Composable
 fun AppSearchBar(
     modifier: Modifier = Modifier,
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
     onSearchClicked: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var searchQuery by remember { mutableStateOf("") }
 
     Card(
         modifier = modifier,
@@ -167,7 +214,7 @@ fun AppSearchBar(
         TextField(
             value = searchQuery,
             onValueChange = {
-                searchQuery = it
+                onSearchQueryChanged(it)
             },
             modifier = Modifier
                 .fillMaxWidth(),
@@ -186,15 +233,28 @@ fun AppSearchBar(
             },
             trailingIcon = {
                 AnimatedVisibility(searchQuery.isNotEmpty()) {
-                    IconButton(onClick = {
-                        keyboardController?.hide()
-                        onSearchClicked(searchQuery)
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Search",
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
+                    Row {
+                        IconButton(onClick = {
+                            keyboardController?.hide()
+                            onSearchQueryChanged("")
+                            onSearchClicked("")
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Clear",
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                        IconButton(onClick = {
+                            keyboardController?.hide()
+                            onSearchClicked(searchQuery)
+                        }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Send,
+                                contentDescription = "Search",
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
                     }
                 }
             },
@@ -212,9 +272,7 @@ fun AppSearchBar(
             keyboardActions = KeyboardActions(
                 onSearch = {
                     keyboardController?.hide()
-                    if (searchQuery.isNotEmpty()) {
-                        onSearchClicked(searchQuery)
-                    }
+                    onSearchClicked(searchQuery)
                 }
             ),
         )
@@ -222,7 +280,7 @@ fun AppSearchBar(
 }
 
 @Composable
-fun AppCard(entry: DictionaryEntry) {
+fun AppCard(wordUI: WordUI) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -245,14 +303,14 @@ fun AppCard(entry: DictionaryEntry) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = entry.word,
+                    text = wordUI.word,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = entry.definition,
+                    text = wordUI.phoneticText,
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
