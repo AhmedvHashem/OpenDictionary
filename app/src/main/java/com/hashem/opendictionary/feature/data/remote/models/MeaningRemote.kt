@@ -10,18 +10,17 @@ data class MeaningRemote(
     @SerialName("partOfSpeech")
     val partOfSpeech: String,
     @SerialName("definitions")
-    val definitions: List<DefinitionRemote>?,
+    var definitions: List<DefinitionRemote>? = null,
     @SerialName("synonyms")
-    val synonyms: List<String>?,
+    var synonyms: Set<String>? = null,
     @SerialName("antonyms")
-    val antonyms: List<String>?
+    var antonyms: Set<String>? = null
 ) {
     fun toMeaning(): Meaning {
         return Meaning(
-            partOfSpeech = partOfSpeech,
             definitions = definitions?.map { it.toDefinition() } ?: emptyList(),
-            synonyms = synonyms ?: emptyList(),
-            antonyms = antonyms ?: emptyList()
+            synonyms = synonyms ?: emptySet(),
+            antonyms = antonyms ?: emptySet(),
         )
     }
 }
@@ -31,7 +30,7 @@ data class DefinitionRemote(
     @SerialName("definition")
     val definition: String,
     @SerialName("example")
-    val example: String?,
+    var example: String? = null,
 ) {
     fun toDefinition(): Definition {
         return Definition(

@@ -5,22 +5,29 @@ import com.hashem.opendictionary.feature.domain.models.Meaning
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class MeaningCache(
-    val partOfSpeech: String,
     val definitions: List<DefinitionCache>,
-    val synonyms: List<String>,
-    val antonyms: List<String>
+    val synonyms: Set<String>,
+    val antonyms: Set<String>
 ) {
     fun toMeaning(): Meaning {
         return Meaning(
-            partOfSpeech = partOfSpeech,
             definitions = definitions.map { it.toDefinition() },
             synonyms = synonyms,
             antonyms = antonyms
         )
     }
 }
+fun Meaning.toMeaningCache(): MeaningCache {
+    return MeaningCache(
+        definitions = definitions.map { it.toDefinitionCache() },
+        synonyms = synonyms,
+        antonyms = antonyms
+    )
+}
 
+@Serializable
 data class DefinitionCache(
     val definition: String,
     val example: String,
@@ -31,4 +38,10 @@ data class DefinitionCache(
             example = example
         )
     }
+}
+fun Definition.toDefinitionCache(): DefinitionCache {
+    return DefinitionCache(
+        definition = definition,
+        example = example
+    )
 }

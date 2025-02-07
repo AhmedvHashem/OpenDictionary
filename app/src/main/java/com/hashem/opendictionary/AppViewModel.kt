@@ -1,6 +1,7 @@
 package com.hashem.opendictionary
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,6 @@ import com.hashem.opendictionary.feature.domain.GetRecentSearchWordsUseCase
 import com.hashem.opendictionary.feature.domain.GetWordUseCase
 import com.hashem.opendictionary.feature.domain.repository.WordResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AppViewModel(
@@ -44,7 +44,7 @@ class AppViewModel(
     init {
         viewModelScope.launch {
             getRecentSearchWordsUseCase().collect { result ->
-                println(result)
+                Log.e("getRecentSearchWordsUseCase", result.toString())
 
                 when (result) {
                     is WordResult.Success -> {
@@ -55,8 +55,8 @@ class AppViewModel(
                 }
             }
 
-            getWordUseCase("test").collect { result ->
-                println(result)
+            getWordUseCase("but").collect { result ->
+                Log.e("getWordUseCase", result.toString())
 
                 when (result) {
                     is WordResult.Success -> {

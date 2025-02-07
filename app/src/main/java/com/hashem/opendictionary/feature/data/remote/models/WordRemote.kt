@@ -10,16 +10,39 @@ data class WordRemote(
     @SerialName("word")
     val word: String,
     @SerialName("phonetics")
-    val phonetics: List<PhoneticRemote>?,
+    var phonetics: List<PhoneticRemote>? = null,
     @SerialName("meanings")
-    val meanings: List<MeaningRemote>?,
+    var meanings: List<MeaningRemote>? = null,
 ) {
     fun toWord(): Word {
         return Word(
             word = word,
-            phonetic = phonetics?.firstOrNull { it.text != null && it.audio != null }?.toPhonetic()
-                ?: Phonetic("", ""),
-            meanings = meanings?.map { it.toMeaning() } ?: emptyList()
+            phonetic = phonetics?.firstOrNull { !it.text.isNullOrEmpty() }?.apply {
+                audio = phonetics?.firstOrNull { !it.audio.isNullOrEmpty() }?.audio ?: ""
+            }?.toPhonetic() ?: Phonetic("", ""),
+            meanings = meanings?.associateBy({ it.partOfSpeech }, { it.toMeaning() }) ?: emptyMap()
+        )
+    }
+}
+
+fun List<WordRemote>.flat(): Word {
+    return map { it.toWord() }.reduce { accWord, newWord ->
+        accWord.copy(
+            phonetic = accWord.phonetic.takeUnless { it.isEmpty() } ?: newWord.phonetic,
+            meanings = accWord.meanings.toMutableMap().apply {
+                newWord.meanings.forEach { (partOfSpeech, meaning) ->
+                    val existingMeaning = this[partOfSpeech]
+                    if (existingMeaning == null) {
+                        this[partOfSpeech] = meaning
+                    } else {
+                        this[partOfSpeech] = existingMeaning.copy(
+                            definitions = existingMeaning.definitions + meaning.definitions,
+                            synonyms = (existingMeaning.synonyms + meaning.synonyms),
+                            antonyms = (existingMeaning.antonyms + meaning.antonyms)
+                        )
+                    }
+                }
+            }
         )
     }
 }

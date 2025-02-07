@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PhoneticRemote(
     @SerialName("text")
-    val text: String?,
+    var text: String? = null,
     @SerialName("audio")
-    val audio: String?,
+    var audio: String? = null,
 ) {
     fun toPhonetic(): Phonetic {
         return Phonetic(

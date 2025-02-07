@@ -9,7 +9,7 @@ abstract class OpenDictionaryNetwork {
     abstract fun dataSource(): WordRemoteDataSource
 
     companion object {
-        private const val BASE_URL = "https://api.dictionaryapi.dev/api/v2/"
+        private const val BASE_URL = "https://api.dictionaryapi.dev/"
 
         private var INSTANCE: OpenDictionaryNetwork? = null
         fun getInstance(): OpenDictionaryNetwork {

@@ -9,13 +9,21 @@ data class WordCache(
     @PrimaryKey
     val word: String,
     val phonetic: PhoneticCache,
-    val meanings: List<MeaningCache>,
+    val meanings: Map<String, MeaningCache>,
 ) {
     fun toWord(): Word {
         return Word(
             word = word,
             phonetic = phonetic.toPhonetic(),
-            meanings = meanings.map { it.toMeaning() },
+            meanings = meanings.mapValues { it.value.toMeaning() }
         )
     }
+}
+
+fun Word.toWordCache(): WordCache {
+    return WordCache(
+        word = word,
+        phonetic = phonetic.toPhoneticCache(),
+        meanings = meanings.mapValues { it.value.toMeaningCache() }
+    )
 }

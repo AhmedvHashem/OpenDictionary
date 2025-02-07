@@ -7,7 +7,7 @@ import retrofit2.http.Path
 
 interface WordRemoteDataSource {
 
-    @GET("/entries/en/{word}")
+    @GET("/api/v2/entries/en/{word}")
     suspend fun getWords(
         @Path("word") word: String
     ): Response<List<WordRemote>>

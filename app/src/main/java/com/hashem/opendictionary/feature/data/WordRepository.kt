@@ -1,9 +1,9 @@
 package com.hashem.opendictionary.feature.data
 
 import com.hashem.opendictionary.feature.data.cache.WordCacheDataSource
-import com.hashem.opendictionary.feature.data.cache.models.WordCache
+import com.hashem.opendictionary.feature.data.cache.models.toWordCache
 import com.hashem.opendictionary.feature.data.remote.WordRemoteDataSource
-import com.hashem.opendictionary.feature.data.remote.models.WordRemote
+import com.hashem.opendictionary.feature.data.remote.models.flat
 import com.hashem.opendictionary.feature.domain.models.Word
 import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordRepository
@@ -19,9 +19,14 @@ class WordRepository(
 ) : WordRepository {
 
     override fun getWord(word: String): Flow<WordResult<Word>> = flow {
-        val wordFromCache = getWordFromCache(word).toWord()
-        emit(wordFromCache)
+        val wordFromCache = cache.getWord(word)
+        if (wordFromCache != null) {
+            emit(wordFromCache.toWord())
+        }
 
+        val wordFromRemote = getWordFromRemote(word)
+        cache.insertWord(wordFromRemote.toWordCache())
+        emit(wordFromRemote)
     }.asWordResultFlow()
 
     override fun getRecentSearchWords(): Flow<WordResult<List<Word>>> = flow {
@@ -29,11 +34,11 @@ class WordRepository(
         emit(recentSearchWords)
     }.asWordResultFlow()
 
-    private suspend fun getWordsFromRemote(word: String): List<WordRemote> {
+    private suspend fun getWordFromRemote(word: String): Word {
         try {
             val response = remote.getWords(word)
             if (response.isSuccessful) {
-                return response.body() ?: throw WordError.NotFoundError
+                return response.body()?.flat() ?: throw WordError.NotFoundError
             } else {
                 throw WordError.ApiError
             }
@@ -42,9 +47,5 @@ class WordRepository(
         } catch (e: Exception) {
             throw WordError.UnknownError("Fail: ${e.message}")
         }
-    }
-
-    private suspend fun getWordFromCache(word: String): WordCache {
-        return cache.getWord(word) ?: throw WordError.NotFoundError
     }
 }

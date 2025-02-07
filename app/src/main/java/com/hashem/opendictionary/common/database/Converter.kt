@@ -18,12 +18,12 @@ class Converter {
     }
 
     @TypeConverter
-    fun fromStringToMeaningCache(value: String): List<MeaningCache> {
+    fun fromStringToMeaningCache(value: String): Map<String, MeaningCache> {
         return Json.decodeFromString(value)
     }
 
     @TypeConverter
-    fun fromMeaningCacheToString(value: List<MeaningCache>): String {
+    fun fromMeaningCacheToString(value: Map<String, MeaningCache>): String {
         return Json.encodeToString(value)
     }
 }
