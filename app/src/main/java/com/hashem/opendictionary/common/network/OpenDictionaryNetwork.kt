@@ -11,10 +11,14 @@ abstract class OpenDictionaryNetwork {
     companion object {
         private const val BASE_URL = "https://api.dictionaryapi.dev/"
 
+        @Volatile
         private var INSTANCE: OpenDictionaryNetwork? = null
         fun getInstance(): OpenDictionaryNetwork {
-            return INSTANCE ?: provideNetwork().also { INSTANCE = it }
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: provideNetwork().also { INSTANCE = it }
+            }
         }
+
 
         private fun provideNetwork(): OpenDictionaryNetwork {
             val logging = HttpLoggingInterceptor()

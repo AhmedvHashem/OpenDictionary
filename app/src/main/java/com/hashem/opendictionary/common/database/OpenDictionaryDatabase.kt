@@ -16,9 +16,12 @@ abstract class OpenDictionaryDatabase : RoomDatabase() {
     companion object {
         private const val DATABASE_NAME = "open-dictionary-database"
 
+        @Volatile
         private var INSTANCE: OpenDictionaryDatabase? = null
         fun getInstance(context: Context): OpenDictionaryDatabase {
-            return INSTANCE ?: provideDatabase(context).also { INSTANCE = it }
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: provideDatabase(context).also { INSTANCE = it }
+            }
         }
 
         private fun provideDatabase(context: Context): OpenDictionaryDatabase {
