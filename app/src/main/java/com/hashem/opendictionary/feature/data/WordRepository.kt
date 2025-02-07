@@ -20,7 +20,7 @@ class WordRepository(
 ) : WordRepository {
 
     override fun getWord(word: String): Flow<WordResult<List<Word>>> = flow {
-        delay(1000)
+        delay(500)
 
         val wordFromCache = cache.getWord(word)
         if (wordFromCache.isNotEmpty()) {
@@ -33,9 +33,9 @@ class WordRepository(
     }.asWordResultFlow()
 
     override fun getRecentSearchWords(): Flow<WordResult<List<Word>>> = flow {
-        delay(1000)
+        delay(500)
 
-        val recentSearchWords = cache.getWords().map { it.toWord() }
+        val recentSearchWords = cache.getWords().reversed().map { it.toWord() }
         emit(recentSearchWords)
     }.asWordResultFlow()
 

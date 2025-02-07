@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hashem.opendictionary.feature.ui.models.WordUI
 import com.hashem.opendictionary.theme.OpenDictionaryTheme
+import kotlinx.coroutines.launch
 
 
 class AppActivity : ComponentActivity() {
@@ -75,22 +77,23 @@ class AppActivity : ComponentActivity() {
                 val uiState by appViewModel.uiState.collectAsStateWithLifecycle()
                 val searchResults by appViewModel.searchResults.collectAsStateWithLifecycle()
                 val searchAction: (searchQuery: String) -> Unit = { appViewModel.search(it) }
+                val showErrorAction: (error: String) -> Unit =
+                    { scope.launch { snackBarHostState.showSnackbar(it) } }
 
                 Scaffold(
                     snackbarHost = { SnackbarHost(snackBarHostState) },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-//                    scope.launch { snackBarHostState.showSnackbar("Hi SnackBar") }
                     App(
                         modifier = Modifier.padding(innerPadding),
                         uiState = uiState,
                         searchResults = searchResults,
-                        searchAction = searchAction
+                        searchAction = searchAction,
+                        showErrorAction = showErrorAction
                     )
                 }
             }
         }
-
     }
 }
 
@@ -107,7 +110,8 @@ fun App(
     modifier: Modifier = Modifier,
     uiState: AppUIState = AppUIState.Loading,
     searchResults: List<WordUI> = emptyList(),
-    searchAction: (searchQuery: String) -> Unit = {}
+    searchAction: (searchQuery: String) -> Unit = {},
+    showErrorAction: (error: String) -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var showRecentSearch by remember { mutableStateOf(true) }
@@ -147,29 +151,71 @@ fun App(
 
             when (uiState) {
                 AppUIState.Loading -> {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                        text = "Loading...",
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Loading...",
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        )
+                    }
                 }
 
                 AppUIState.Success -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(searchResults) { word ->
-                            AppCard(word)
+                    if (searchResults.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No results found",
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(searchResults) { word ->
+                                AppCard(word)
+                            }
                         }
                     }
                 }
 
                 is AppUIState.Error -> {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                        text = uiState.message,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    if (uiState.message == "Network Error" && searchResults.isNotEmpty()) {
+                        showErrorAction("Network Error")
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(searchResults) { word ->
+                                AppCard(word)
+                            }
+                        }
+                    } else if (uiState.message == "Not Found") {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No results found",
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            )
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = uiState.message,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        }
+                    }
                 }
             }
 

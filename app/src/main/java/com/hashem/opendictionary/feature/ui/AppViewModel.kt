@@ -1,7 +1,6 @@
 package com.hashem.opendictionary.feature.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,6 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -53,14 +53,12 @@ class AppViewModel(
     val uiState: MutableStateFlow<AppUIState> = MutableStateFlow(AppUIState.Loading)
 
     private val searchQuery: MutableStateFlow<String> = MutableStateFlow("")
-    val searchResults: StateFlow<List<WordUI>> = searchQuery.flatMapLatest { searchQuery ->
-        if (searchQuery.isEmpty()) {
+    val searchResults: StateFlow<List<WordUI>> = searchQuery.flatMapLatest { query ->
+        if (query.isEmpty()) {
             getRecentSearchWordsUseCase()
         } else {
-            getWordUseCase(searchQuery)
+            getWordUseCase(query)
         }.map { result ->
-            Log.e("getWords", result.toString())
-
             when (result) {
                 is WordResult.Success -> {
                     uiState.value = AppUIState.Success
@@ -79,46 +77,17 @@ class AppViewModel(
                     emptyList()
                 }
             }
-        }
+        }.filterNot { it.isEmpty() }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = emptyList()
     )
 
-//    val words: MutableStateFlow<List<WordUI>> = MutableStateFlow(emptyList())
-//    val uiState: StateFlow<AppUIState> = searchQuery.flatMapLatest { searchQuery ->
-//        if (searchQuery.isEmpty()) {
-//            getRecentSearchWordsUseCase()
-//        } else {
-//            getWordUseCase(searchQuery)
-//        }.map { result ->
-//            Log.e("getWords", result.toString())
-//
-//            when (result) {
-//                is WordResult.Success -> {
-//                    words.value = result.data.map { it.toWordUI() }
-//                    AppUIState.Success
-//                }
-//
-//                is WordResult.Fail -> {
-//                    when (result.error) {
-//                        is WordError.NetworkError -> AppUIState.Error("Network Error")
-//                        is WordError.NotFoundError -> AppUIState.Error("Not Found")
-//                        is WordError.ApiError -> AppUIState.Error("Api Error")
-//                        is WordError.UnknownError -> AppUIState.Error("Unknown Error")
-//                    }
-//                }
-//            }
-//        }
-//    }.stateIn(
-//        scope = viewModelScope,
-//        started = SharingStarted.WhileSubscribed(5_000),
-//        initialValue = AppUIState.Loading
-//    )
-
-
     fun search(query: String) {
+        if (query == searchQuery.value)
+            return
+
         uiState.value = AppUIState.Loading
         searchQuery.value = query
     }
