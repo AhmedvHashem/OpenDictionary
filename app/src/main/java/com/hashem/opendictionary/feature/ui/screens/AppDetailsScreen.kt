@@ -11,11 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -138,54 +134,6 @@ fun AppDetailsScreen(
                             )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = word.word,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        FilterChip(
-                            selected = true,
-                            onClick = { },
-                            label = { Text("English") },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = MaterialTheme.colorScheme.primary,
-                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary
-                            )
-                        )
-                        FilterChip(
-                            selected = false,
-                            onClick = { },
-                            label = { Text("French") }
-                        )
-                        FilterChip(
-                            selected = false,
-                            onClick = { },
-                            label = { Text("Creole") }
-                        )
-                    }
                 }
             }
         }
