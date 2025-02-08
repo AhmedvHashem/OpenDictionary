@@ -64,11 +64,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    testImplementation(libs.junit)
-    testImplementation(kotlin("test"))
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.testing.junit)
+    testImplementation(libs.testing.kotlin)
+    testImplementation(libs.testing.kotlin.coroutines)
+    testImplementation(libs.mocking.mockito.core)
+    testImplementation(libs.mocking.mockito.kotlin)
+    testImplementation(libs.asserting.truth)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
