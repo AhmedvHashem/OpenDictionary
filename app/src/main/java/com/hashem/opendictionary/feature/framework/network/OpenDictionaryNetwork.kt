@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.framework.network
+package com.hashem.opendictionary.feature.framework.network
 
 import com.hashem.opendictionary.feature.data.remote.WordRemoteDataSource
 import okhttp3.OkHttpClient

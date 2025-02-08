@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.framework.network
+package com.hashem.opendictionary.feature.framework.network
 
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

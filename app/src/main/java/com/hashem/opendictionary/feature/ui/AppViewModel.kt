@@ -13,8 +13,8 @@ import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordResult
 import com.hashem.opendictionary.feature.ui.models.WordUI
 import com.hashem.opendictionary.feature.ui.models.toWordUI
-import com.hashem.opendictionary.framework.database.OpenDictionaryDatabase
-import com.hashem.opendictionary.framework.network.OpenDictionaryNetwork
+import com.hashem.opendictionary.feature.framework.database.OpenDictionaryDatabase
+import com.hashem.opendictionary.feature.framework.network.OpenDictionaryNetwork
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

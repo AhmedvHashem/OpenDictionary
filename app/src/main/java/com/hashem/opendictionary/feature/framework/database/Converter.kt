@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.framework.database
+package com.hashem.opendictionary.feature.framework.database
 
 import androidx.room.TypeConverter
 import com.hashem.opendictionary.feature.data.cache.models.MeaningCache
