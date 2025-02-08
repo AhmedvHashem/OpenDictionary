@@ -61,8 +61,9 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
+    debugImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.testing.androidx.compose.manifest)
 
     testImplementation(libs.testing.junit)
     testImplementation(libs.testing.kotlin)
@@ -71,8 +72,8 @@ dependencies {
     testImplementation(libs.mocking.mockito.kotlin)
     testImplementation(libs.asserting.truth)
 
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.testing.androidx.junit)
+    androidTestImplementation(libs.testing.androidx.espresso)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.testing.androidx.compose.junit4)
 }
