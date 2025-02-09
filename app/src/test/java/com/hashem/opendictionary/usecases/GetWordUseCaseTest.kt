@@ -8,6 +8,7 @@ import com.hashem.opendictionary.feature.domain.models.Word
 import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordRepository
 import com.hashem.opendictionary.feature.domain.repository.WordResult
+import com.hashem.opendictionary.fixtures.WordFixture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -31,21 +32,13 @@ class GetWordUseCaseTest {
     @Test
     fun `invoke should return word from repository`() = runTest {
         val word = "example"
-        val expectedWord = Word(
-            word, Phonetic("qwe", "audio"), mapOf(
-                "noun" to Meaning(
-                    listOf(
-                        Definition("meaning", "example")
-                    ), setOf("synonym"), setOf("antonym")
-                )
-            )
-        )
-        whenever(repository.getWord(word)).thenReturn(flowOf(WordResult.Success(listOf(expectedWord))))
+        val expectedWord = listOf(WordFixture.createWord())
+        whenever(repository.getWord(word)).thenReturn(flowOf(WordResult.Success(expectedWord)))
 
         val resultFlow = getWordUseCase(word)
 
         resultFlow.collect { result ->
-            assertEquals(WordResult.Success(listOf(expectedWord)), result)
+            assertEquals(WordResult.Success(expectedWord), result)
         }
     }
 
