@@ -12,7 +12,7 @@ import com.hashem.opendictionary.feature.domain.models.Definition
 import com.hashem.opendictionary.feature.domain.models.Meaning
 import com.hashem.opendictionary.feature.domain.models.Phonetic
 import com.hashem.opendictionary.feature.domain.models.Word
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class WordCacheTest {
