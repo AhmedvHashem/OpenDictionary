@@ -1,4 +1,4 @@
-# Open Dictionary Android Compose Application
+# Open Dictionary Application
 
 **Open Dictionary** is a dictionary search app to look up meanings and definitions of words, Built using Kotlin and Jetpack Compose.
 
