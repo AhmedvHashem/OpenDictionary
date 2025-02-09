@@ -25,6 +25,20 @@ data class WordRemote(
     }
 }
 
+
+/**
+ * Flattens a list of WordRemote objects into a single Word object by combining their properties.
+ *
+ * The flattening process:
+ * 1. Converts each WordRemote to Word
+ * 2. Combines all Words by:
+ *    - Using the first non-empty phonetic value encountered
+ *    - Merging meanings by part of speech, where for each part of speech:
+ *      - If it's new, adds it directly
+ *      - If it exists, combines the definitions, synonyms, and antonyms
+ *
+ * @return A single Word object containing the combined information from all WordRemote objects
+ */
 fun List<WordRemote>.flat(): Word {
     return map { it.toWord() }.reduce { accWord, newWord ->
         accWord.copy(
