@@ -114,4 +114,112 @@ class WordRemoteTests {
 
         assertEquals(expectedWord, result)
     }
+
+    @Test
+    fun `toPhonetic should map PhoneticRemote to Phonetic correctly`() {
+        val phoneticRemote = PhoneticRemote(
+            text = "testText",
+            audio = "testAudio"
+        )
+
+        val expectedPhonetic = Phonetic(
+            text = "testText",
+            audio = "testAudio"
+        )
+
+        val result = phoneticRemote.toPhonetic()
+
+        assertEquals(expectedPhonetic, result)
+    }
+
+    @Test
+    fun `toPhonetic should handle null text and audio`() {
+        val phoneticRemote = PhoneticRemote(
+            text = null,
+            audio = null
+        )
+
+        val expectedPhonetic = Phonetic(
+            text = "",
+            audio = ""
+        )
+
+        val result = phoneticRemote.toPhonetic()
+
+        assertEquals(expectedPhonetic, result)
+    }
+
+    @Test
+    fun `toMeaning should map MeaningRemote to Meaning correctly`() {
+        val meaningRemote = MeaningRemote(
+            partOfSpeech = "noun",
+            definitions = listOf(DefinitionRemote("definition1", "example1")),
+            synonyms = setOf("synonym1"),
+            antonyms = setOf("antonym1")
+        )
+
+        val expectedMeaning = Meaning(
+            definitions = listOf(Definition("definition1", "example1")),
+            synonyms = setOf("synonym1"),
+            antonyms = setOf("antonym1")
+        )
+
+        val result = meaningRemote.toMeaning()
+
+        assertEquals(expectedMeaning, result)
+    }
+
+    @Test
+    fun `toMeaning should handle null definitions, synonyms, and antonyms`() {
+        val meaningRemote = MeaningRemote(
+            partOfSpeech = "noun",
+            definitions = null,
+            synonyms = null,
+            antonyms = null
+        )
+
+        val expectedMeaning = Meaning(
+            definitions = emptyList(),
+            synonyms = emptySet(),
+            antonyms = emptySet()
+        )
+
+        val result = meaningRemote.toMeaning()
+
+        assertEquals(expectedMeaning, result)
+    }
+
+    @Test
+    fun `toDefinition should map DefinitionRemote to Definition correctly`() {
+        val definitionRemote = DefinitionRemote(
+            definition = "definition1",
+            example = "example1"
+        )
+
+        val expectedDefinition = Definition(
+            definition = "definition1",
+            example = "example1"
+        )
+
+        val result = definitionRemote.toDefinition()
+
+        assertEquals(expectedDefinition, result)
+    }
+
+    @Test
+    fun `toDefinition should handle null example`() {
+        val definitionRemote = DefinitionRemote(
+            definition = "definition1",
+            example = null
+        )
+
+        val expectedDefinition = Definition(
+            definition = "definition1",
+            example = ""
+        )
+
+        val result = definitionRemote.toDefinition()
+
+        assertEquals(expectedDefinition, result)
+    }
 }
