@@ -1,4 +1,4 @@
-package com.hashem.opendictionary
+package com.hashem.opendictionary.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.hashem.opendictionary.feature.data.WordRepository

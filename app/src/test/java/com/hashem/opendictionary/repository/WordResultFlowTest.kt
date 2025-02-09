@@ -1,4 +1,4 @@
-package com.hashem.opendictionary
+package com.hashem.opendictionary.repository
 
 import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordResult
@@ -6,8 +6,8 @@ import com.hashem.opendictionary.feature.domain.repository.asWordResultFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 
 class WordResultFlowTest {
@@ -39,5 +39,4 @@ class WordResultFlowTest {
                 assertEquals(WordResult.Fail(WordError.UnknownError("Unknown exception")), result)
             }
         }
-
 }

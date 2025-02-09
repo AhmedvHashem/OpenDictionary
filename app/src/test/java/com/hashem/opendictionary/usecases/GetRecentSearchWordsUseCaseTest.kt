@@ -8,10 +8,10 @@ import com.hashem.opendictionary.fixtures.WordFixture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class GetRecentSearchWordsUseCaseTest {
@@ -19,7 +19,7 @@ class GetRecentSearchWordsUseCaseTest {
     private lateinit var repository: WordRepository
     private lateinit var getRecentSearchWordsUseCase: GetRecentSearchWordsUseCase
 
-    @Before
+    @BeforeTest
     fun setUp() {
         repository = mock()
         getRecentSearchWordsUseCase = GetRecentSearchWordsUseCase(repository, Dispatchers.Unconfined)

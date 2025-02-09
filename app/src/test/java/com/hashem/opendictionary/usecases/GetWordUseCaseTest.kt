@@ -1,10 +1,6 @@
 package com.hashem.opendictionary.usecases
 
 import com.hashem.opendictionary.feature.domain.GetWordUseCase
-import com.hashem.opendictionary.feature.domain.models.Definition
-import com.hashem.opendictionary.feature.domain.models.Meaning
-import com.hashem.opendictionary.feature.domain.models.Phonetic
-import com.hashem.opendictionary.feature.domain.models.Word
 import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordRepository
 import com.hashem.opendictionary.feature.domain.repository.WordResult
@@ -12,10 +8,10 @@ import com.hashem.opendictionary.fixtures.WordFixture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class GetWordUseCaseTest {
@@ -23,7 +19,7 @@ class GetWordUseCaseTest {
     private lateinit var repository: WordRepository
     private lateinit var getWordUseCase: GetWordUseCase
 
-    @Before
+    @BeforeTest
     fun setUp() {
         repository = mock()
         getWordUseCase = GetWordUseCase(repository, Dispatchers.Unconfined)
