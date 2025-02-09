@@ -4,14 +4,9 @@
 
 ---
 ## 📚 Screenshots
-| List          | Search        | Details       |
-| ------------- | ------------- | ------------- |
-| ![Screenshot_20250209_185736](https://github.com/user-attachments/assets/8b0a351e-790e-4bb9-ab0b-b4e9090cbeb7) | ![Screenshot_20250209_185805](https://github.com/user-attachments/assets/316e9ccb-7e4a-4772-b171-edf09ac1202b) | ![Screenshot_20250209_185841](https://github.com/user-attachments/assets/1e4bc273-cdcd-42fc-88f4-0c0e990c83b7) |
-
-
-
-
----
+| List          | Search        | Details       | Details       |
+| ------------- | ------------- | ------------- | ------------- |
+| ![Screenshot_20250209_185736](https://github.com/user-attachments/assets/ba821658-7ec8-4321-bfa4-8b979bc9ba89) | ![Screenshot_20250209_185805](https://github.com/user-attachments/assets/316e9ccb-7e4a-4772-b171-edf09ac1202b) | ![Screenshot_20250209_185841](https://github.com/user-attachments/assets/1e4bc273-cdcd-42fc-88f4-0c0e990c83b7) | <video src="https://github.com/user-attachments/assets/da2ae176-b271-4b17-be4e-d3faa6f04fea"> |
 
 ## 📚 Tech Stack
 - **Programming Language**: Kotlin
