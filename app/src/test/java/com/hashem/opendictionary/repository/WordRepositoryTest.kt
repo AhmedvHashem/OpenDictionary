@@ -17,11 +17,11 @@ import com.hashem.opendictionary.feature.domain.repository.WordResult
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
-import org.junit.Before
-import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 import retrofit2.Response
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 
 class WordRepositoryTest {
@@ -37,7 +37,7 @@ class WordRepositoryTest {
     val wordList = listOf(wordCache)
 
 
-    @Before
+    @BeforeTest
     fun setUp() {
         repository = WordRepository(remote, cache)
     }

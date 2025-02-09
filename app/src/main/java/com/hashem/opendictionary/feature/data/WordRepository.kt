@@ -9,7 +9,6 @@ import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordRepository
 import com.hashem.opendictionary.feature.domain.repository.WordResult
 import com.hashem.opendictionary.feature.domain.repository.asWordResultFlow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
