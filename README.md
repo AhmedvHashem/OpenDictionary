@@ -4,9 +4,12 @@
 
 ---
 ## 📚 Screenshots
-| List screen    | Details screen  |
-| ------------- | ------------- |
-| ![Screenshot_20241120_034309](https://github.com/user-attachments/assets/b49f172a-62b7-458a-ace6-f7fc73da1809a4)  | ![Screenshot_20241120_034430](https://github.com/user-attachments/assets/2f34988b-675das6-49eb-9f63-df6fc3101671)  |
+| List          | Search        | Details       |
+| ------------- | ------------- | ------------- |
+| ![Screenshot_20250209_185736](https://github.com/user-attachments/assets/8b0a351e-790e-4bb9-ab0b-b4e9090cbeb7) | ![Screenshot_20250209_185805](https://github.com/user-attachments/assets/316e9ccb-7e4a-4772-b171-edf09ac1202b) | ![Screenshot_20250209_185841](https://github.com/user-attachments/assets/1e4bc273-cdcd-42fc-88f4-0c0e990c83b7) |
+
+
+
 
 ---
 
