@@ -18,6 +18,7 @@ class WordRepository(
     private val cache: WordCacheDataSource
 ) : WordRepository {
 
+    // TODO: Should be changed to return single word instead of list
     override fun getWord(word: String): Flow<WordResult<List<Word>>> = flow {
         val wordFromCache = cache.getWord(word)
         if (wordFromCache.isNotEmpty()) {
