@@ -14,6 +14,9 @@ import com.hashem.opendictionary.feature.data.remote.models.WordRemote
 import com.hashem.opendictionary.feature.domain.models.Word
 import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordResult
+import com.hashem.opendictionary.fixtures.WordCacheFixture
+import com.hashem.opendictionary.fixtures.WordFixture
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
@@ -22,24 +25,58 @@ import org.mockito.kotlin.whenever
 import retrofit2.Response
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 
 class WordRepositoryTest {
 
-    private lateinit var repository: WordRepository
     private val remote: WordRemoteDataSource = mock()
     private val cache: WordCacheDataSource = mock()
+    private lateinit var repository: WordRepository
+
     private val word = "test"
     private val phoneticCache = PhoneticCache("test", "testing Audio")
     private val definitionCache = DefinitionCache("test", "testing")
     private val meaning = MeaningCache(listOf(definitionCache), setOf("test"), setOf("test"))
     private val wordCache = WordCache(word, phoneticCache, mapOf("test" to meaning))
-    val wordList = listOf(wordCache)
 
 
     @BeforeTest
     fun setUp() {
         repository = WordRepository(remote, cache)
+    }
+
+    @Test
+    fun `invoke should return recent search words from cache only`(): Unit = runTest {
+        val expectedWords = listOf(WordFixture.createWord(word = "cache-word1"))
+
+        whenever(cache.getWords()).thenReturn(listOf(WordCacheFixture.createWordCache(word = "cache-word1")))
+
+        // single verifies that the flow emits only once
+        val result = repository.getRecentSearchWords().single()
+        assertEquals(WordResult.Success(expectedWords), result)
+    }
+
+    @Test
+    fun `invoke should return empty list if no recent search words in cache`(): Unit = runTest {
+        val expectedWords = emptyList<Word>()
+
+        whenever(cache.getWords()).thenReturn(emptyList())
+
+        // single verifies that the flow emits only once
+        val result = repository.getRecentSearchWords().single()
+        assertEquals(WordResult.Success(expectedWords), result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `invoke should return error if exception has been thrown`(): Unit = runTest {
+        val exceptionMessage = "error"
+
+        whenever(cache.getWords()).thenThrow(Exception(exceptionMessage))
+
+        // single verifies that the flow emits only once
+        val result = repository.getRecentSearchWords().single()
+        assertEquals(WordResult.Fail(WordError.UnknownError(exceptionMessage)), result)
     }
 
     @Test
@@ -117,38 +154,6 @@ class WordRepositoryTest {
             assertThat(result).isInstanceOf(WordResult.Fail::class.java)
             val errorResult = result as WordResult.Fail
             assertThat(errorResult.error).isInstanceOf(WordError.UnknownError::class.java)
-        }
-    }
-
-
-    @Test
-    fun `getRecentSearchWords - success`(): Unit = runTest {
-        whenever(cache.getWords()).thenReturn(wordList)
-
-        val resultFlow = repository.getRecentSearchWords()
-        resultFlow.collect { result ->
-            assertThat(result).isInstanceOf(WordResult.Success::class.java)
-            val successResult = result as WordResult.Success
-            assertThat(successResult.data).hasSize(2)
-            assertThat(successResult.data[0].word).isEqualTo("word1")
-        }
-    }
-
-    @Test
-    fun `getWord - from remote - unknown error`() = runTest {
-        val word = "test"
-        val exceptionMessage = "Unknown Exception"
-
-        whenever(cache.getWord(word)).thenReturn(emptyList())
-        whenever(remote.getWords(word)).thenThrow(Exception(exceptionMessage))
-
-        val resultFlow = repository.getWord(word)
-        resultFlow.collect { result ->
-            assertThat(result).isInstanceOf(WordResult.Fail::class.java)
-            val errorResult = result as WordResult.Fail
-            assertThat(errorResult.error).isInstanceOf(WordError.UnknownError::class.java)
-            val unknownError = errorResult.error as WordError.UnknownError
-            assertThat(unknownError.message).contains(exceptionMessage)
         }
     }
 

@@ -41,6 +41,7 @@ android {
     }
 }
 
+val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     implementation(libs.kotlin.serialization)
 
@@ -69,6 +70,7 @@ dependencies {
     testImplementation(libs.testing.kotlin)
     testImplementation(libs.testing.kotlin.coroutines)
     testImplementation(libs.mocking.mockito.core)
+    mockitoAgent(libs.mocking.mockito.core) { isTransitive = false }
     testImplementation(libs.mocking.mockito.kotlin)
     testImplementation(libs.asserting.truth)
 
@@ -76,4 +78,8 @@ dependencies {
     androidTestImplementation(libs.testing.androidx.espresso)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.testing.androidx.compose.junit4)
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
