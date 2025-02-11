@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.usecases
+package com.hashem.opendictionary.domain
 
 import com.hashem.opendictionary.feature.domain.GetWordUseCase
 import com.hashem.opendictionary.feature.domain.repository.WordError

@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.repository
+package com.hashem.opendictionary.domain
 
 import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordResult

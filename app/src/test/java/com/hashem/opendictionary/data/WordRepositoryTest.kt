@@ -1,4 +1,4 @@
-package com.hashem.opendictionary.repository
+package com.hashem.opendictionary.data
 
 import com.hashem.opendictionary.feature.data.WordRepository
 import com.hashem.opendictionary.feature.data.cache.WordCacheDataSource
