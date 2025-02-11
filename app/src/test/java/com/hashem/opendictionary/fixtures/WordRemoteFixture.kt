@@ -31,8 +31,11 @@ object WordRemoteFixture {
         definition: String = "definition", example: String = "example"
     ) = DefinitionRemote(definition, example)
 
-    fun mockSuccessResponse(word: String): Response<List<WordRemote>> =
+    fun mockSuccessResponse(word: String = "example"): Response<List<WordRemote>> =
         Response.success(listOf(createWordRemote(word = word)))
+
+    fun mockSuccessNullResponse(): Response<List<WordRemote>> =
+        Response.success(null)
 
     fun mockNotFoundResponse(): Response<List<WordRemote>> {
         return Response.error(
