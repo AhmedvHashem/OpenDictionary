@@ -2,30 +2,31 @@ package com.hashem.opendictionary.feature.data
 
 import com.hashem.opendictionary.feature.data.cache.WordCacheDataSource
 import com.hashem.opendictionary.feature.data.cache.models.toWordCache
+import com.hashem.opendictionary.feature.data.remote.DefaultNetworkErrorHandler
+import com.hashem.opendictionary.feature.data.remote.NetworkErrorHandler
 import com.hashem.opendictionary.feature.data.remote.WordRemoteDataSource
 import com.hashem.opendictionary.feature.data.remote.models.flat
 import com.hashem.opendictionary.feature.domain.models.Word
-import com.hashem.opendictionary.feature.domain.repository.WordError
 import com.hashem.opendictionary.feature.domain.repository.WordRepository
 import com.hashem.opendictionary.feature.domain.repository.WordResult
 import com.hashem.opendictionary.feature.domain.repository.asWordResultFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.IOException
 
 class WordRepository(
     private val remote: WordRemoteDataSource,
-    private val cache: WordCacheDataSource
+    private val cache: WordCacheDataSource,
+    private val networkErrorHandler: NetworkErrorHandler = DefaultNetworkErrorHandler()
 ) : WordRepository {
 
     // TODO: Should be changed to return single word instead of list
     override fun getWord(word: String): Flow<WordResult<List<Word>>> = flow {
-        val wordFromCache = cache.getWord(word)
+        val wordFromCache = cache.getWords(word)
         if (wordFromCache.isNotEmpty()) {
             emit(wordFromCache.map { it.toWord() })
         }
 
-        val wordFromRemote = getWordFromRemote(word)
+        val wordFromRemote = networkErrorHandler.handle { remote.getWords(word) }.flat()
         cache.insertWord(wordFromRemote.toWordCache())
         emit(listOf(wordFromRemote))
     }.asWordResultFlow()
@@ -34,24 +35,4 @@ class WordRepository(
         val recentSearchWords = cache.getWords().reversed().map { it.toWord() }
         emit(recentSearchWords)
     }.asWordResultFlow()
-
-    private suspend fun getWordFromRemote(word: String): Word {
-        try {
-            val response = remote.getWords(word)
-            if (response.isSuccessful) {
-                return response.body()?.flat() ?: throw WordError.ApiError
-            } else {
-                if (response.code() == 404)
-                    throw WordError.NotFoundError
-                else
-                    throw WordError.ApiError
-            }
-        } catch (e: WordError) {
-            throw e
-        } catch (e: IOException) {
-            throw WordError.NetworkError
-        } catch (e: Exception) {
-            throw WordError.UnknownError("Fail: ${e.message}")
-        }
-    }
 }

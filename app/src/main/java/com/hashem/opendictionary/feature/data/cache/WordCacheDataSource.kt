@@ -13,7 +13,7 @@ interface WordCacheDataSource {
     suspend fun getWords(): List<WordCache>
 
     @Query("SELECT * FROM WordCache WHERE word = :word")
-    suspend fun getWord(word: String): List<WordCache>
+    suspend fun getWords(word: String): List<WordCache>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWord(word: WordCache)

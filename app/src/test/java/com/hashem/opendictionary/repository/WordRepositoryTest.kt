@@ -80,12 +80,12 @@ class WordRepositoryTest {
             WordResult.Success(listOf(WordFixture.createWord("remote-word")))
         )
 
-        whenever(cache.getWord(word)).thenReturn(listOf(WordCacheFixture.createWordCache("cache-word")))
+        whenever(cache.getWords(word)).thenReturn(listOf(WordCacheFixture.createWordCache("cache-word")))
         whenever(remote.getWords(word)).thenReturn(WordRemoteFixture.mockSuccessResponse("remote-word"))
 
         val result = repository.getWord(word).toList()
 
-        verify(cache).getWord(word)
+        verify(cache).getWords(word)
         verify(cache).insertWord(WordCacheFixture.createWordCache("remote-word"))
         verify(remote).getWords(word)
         assertEquals(expectedResult, result)
@@ -96,12 +96,12 @@ class WordRepositoryTest {
         val word = "remote-word1"
         val expectedWords = listOf(WordFixture.createWord(word))
 
-        whenever(cache.getWord(word)).thenReturn(emptyList())
+        whenever(cache.getWords(word)).thenReturn(emptyList())
         whenever(remote.getWords(word)).thenReturn(WordRemoteFixture.mockSuccessResponse(word))
 
         val result = repository.getWord(word).single()
 
-        verify(cache).getWord(word)
+        verify(cache).getWords(word)
         verify(remote).getWords(word)
         assertEquals(WordResult.Success(expectedWords), result)
     }
@@ -109,7 +109,7 @@ class WordRepositoryTest {
     @Test
     fun `getWord should return error if exception has been thrown`() = runTest {
         val word = "word"
-        whenever(cache.getWord(word)).thenReturn(emptyList())
+        whenever(cache.getWords(word)).thenReturn(emptyList())
         whenever(remote.getWords(word)).thenThrow(RuntimeException())
 
         val result = repository.getWord(word).single()
@@ -125,7 +125,7 @@ class WordRepositoryTest {
     @Test
     fun `getWord should return NotFoundError if word is not found`() = runTest {
         val word = "word"
-        whenever(cache.getWord(word)).thenReturn(emptyList())
+        whenever(cache.getWords(word)).thenReturn(emptyList())
         whenever(remote.getWords(word)).thenReturn(WordRemoteFixture.mockNotFoundResponse())
 
         val result = repository.getWord(word).single()
@@ -135,7 +135,7 @@ class WordRepositoryTest {
     @Test
     fun `getWord should return ApiError on server error`() = runTest {
         val word = "word"
-        whenever(cache.getWord(word)).thenReturn(emptyList())
+        whenever(cache.getWords(word)).thenReturn(emptyList())
         whenever(remote.getWords(word)).thenReturn(WordRemoteFixture.mockServerErrorResponse())
 
         val result = repository.getWord(word).single()
