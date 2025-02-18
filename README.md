@@ -20,11 +20,7 @@
 - **Mocking**: Mockito
 - **asserting**: Truth
 
-## 📊 Class Diagram
+## 📊 Arch Diagram
 **a high-level overview**
 
-<img width="655" alt="Screenshot 2024-11-20 at 3 40 25 AM" src="https://github.com/user-attachments/assets/a2029f02-a3e8-4a3e-9eb4-179cddcda894e6">
-
-
-
-   
+<img width="1080" alt="arch" src="https://github.com/user-attachments/assets/e5bc0c4c-80ff-4eac-979e-83f2db65615c" />
