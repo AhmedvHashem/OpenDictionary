@@ -34,4 +34,55 @@ class DefaultNetworkErrorHandlerTest {
         assertEquals(WordError.ApiError::class.java, error::class.java)
     }
 
+
+//    @Test
+//    fun `handle should throw ApiError if response is not successful`() = runBlocking {
+//        val response = mock(Response::class.java) as Response<String>
+//        `when`(response.isSuccessful).thenReturn(false)
+//        `when`(response.code()).thenReturn(500)
+//
+//        val exception = Assert.assertThrows(WordError.ApiError::class.java) {
+//            runBlocking { networkErrorHandler.handle { response } }
+//        }
+//
+//        assertEquals(WordError.ApiError::class.java, exception::class.java)
+//    }
+
+//    @Test
+//    fun `handle should throw NotFoundError if response code is 404`() = runBlocking {
+//        val response = mock(Response::class.java) as Response<String>
+//        `when`(response.isSuccessful).thenReturn(false)
+//        `when`(response.code()).thenReturn(404)
+//
+//        val exception = assertThrows(WordError.NotFoundError::class.java) {
+//            runBlocking { networkErrorHandler.handle { response } }
+//        }
+//
+//        assertEquals(WordError.NotFoundError::class.java, exception::class.java)
+//    }
+//
+//    @Test
+//    fun `handle should throw NetworkError if IOException is thrown`() = runBlocking {
+//        val block: suspend () -> Response<String> = mock()
+//        `when`(block.invoke()).thenThrow(IOException::class.java)
+//
+//        val exception = assertThrows(WordError.NetworkError::class.java) {
+//            runBlocking { networkErrorHandler.handle(block) }
+//        }
+//
+//        assertEquals(WordError.NetworkError::class.java, exception::class.java)
+//    }
+//
+//    @Test
+//    fun `handle should rethrow WordError if it is thrown`() = runBlocking {
+//        val block: suspend () -> Response<String> = mock()
+//        `when`(block.invoke()).thenThrow(WordError.ApiError::class.java)
+//
+//        val exception = assertThrows(WordError.ApiError::class.java) {
+//            runBlocking { networkErrorHandler.handle(block) }
+//        }
+//
+//        assertEquals(WordError.ApiError::class.java, exception::class.java)
+//    }
+
 }
